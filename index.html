@@ -1,38 +1,45 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-br" >
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>MiniZap</title>
+  <title>MiniZap - estilo WhatsApp</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div id="app">
-    <header>
-      <h1>MiniZap</h1>
-      <button id="btnEditProfile">Editar Perfil</button>
-    </header>
+    <aside id="sidebar">
+      <header>
+        <h2>MiniZap</h2>
+        <button id="btnEditProfile">Editar Perfil</button>
+      </header>
 
-    <section id="profileSection" class="hidden">
-      <input type="text" id="inputName" placeholder="Seu nome" />
-      <input type="text" id="inputNumber" placeholder="Seu número (ex: 55999999999)" />
-      <input type="text" id="inputPhoto" placeholder="URL da foto (opcional)" />
-      <button id="btnSaveProfile">Salvar Perfil</button>
-    </section>
+      <section id="profileSection" class="hidden">
+        <input type="text" id="inputName" placeholder="Seu nome" />
+        <input type="text" id="inputNumber" placeholder="Seu número" />
+        <input type="text" id="inputPhoto" placeholder="URL da foto (opcional)" />
+        <button id="btnSaveProfile">Salvar Perfil</button>
+      </section>
 
-    <section id="contactsSection">
-      <h2>Contatos</h2>
-      <div id="contactsList"></div>
-      <input type="text" id="inputAddContact" placeholder="Número do contato (ex: 55888888888)" />
-      <button id="btnAddContact">Adicionar Contato</button>
-    </section>
+      <section id="contactsSection">
+        <h3>Contatos</h3>
+        <div id="contactsList"></div>
+        <input type="text" id="inputAddContact" placeholder="Número do contato" />
+        <button id="btnAddContact">Adicionar Contato</button>
+      </section>
+    </aside>
 
-    <section id="chatSection" class="hidden">
-      <h2 id="chatWith"></h2>
+    <main id="chatWindow">
+      <header id="chatHeader">
+        <div id="chatWith">Selecione um contato</div>
+      </header>
       <div id="chatMessages"></div>
-      <input type="text" id="inputMessage" placeholder="Digite sua mensagem" />
-      <button id="btnSendMessage">Enviar</button>
-    </section>
+
+      <footer id="chatFooter" class="hidden">
+        <input type="text" id="inputMessage" placeholder="Digite uma mensagem" />
+        <button id="btnSendMessage">Enviar</button>
+      </footer>
+    </main>
   </div>
 
   <script type="module" src="script.js"></script>
