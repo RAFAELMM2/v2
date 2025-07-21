@@ -1,79 +1,91 @@
 body {
-  font-family: sans-serif;
   margin: 0;
-  padding: 0;
-  background: #111;
-  color: white;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #ece5dd;
 }
 
 .app {
-  max-width: 500px;
-  margin: auto;
-  padding: 20px;
-  background: #1e1e1e;
-  border-radius: 10px;
-  box-shadow: 0 0 20px #000;
-}
-
-header {
   display: flex;
+  height: 100vh;
+}
+
+.sidebar {
+  width: 30%;
+  background-color: #fff;
+  border-right: 1px solid #ccc;
+  display: flex;
+  flex-direction: column;
   justify-content: space-between;
-  align-items: center;
-  background: #222;
+}
+
+.profile {
   padding: 10px;
-  border-radius: 8px;
+  text-align: center;
+  border-bottom: 1px solid #ccc;
 }
 
-input, button {
-  display: block;
-  width: 100%;
-  padding: 10px;
-  margin-top: 10px;
-  border: none;
-  border-radius: 5px;
-  font-size: 16px;
-}
-
-input {
-  background: #333;
-  color: white;
-}
-
-button {
-  background: #0a84ff;
-  color: white;
+.profile img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
   cursor: pointer;
 }
 
-button:hover {
-  background: #0060df;
-}
-
-#chatMessages {
-  background: #000;
-  height: 200px;
+.contacts {
+  flex-grow: 1;
   overflow-y: auto;
   padding: 10px;
+}
+
+.contacts div {
+  padding: 8px;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+}
+
+.add-contact {
+  padding: 10px;
+  border-top: 1px solid #ccc;
+}
+
+.chat {
+  width: 70%;
+  display: flex;
+  flex-direction: column;
+}
+
+.chat-header {
+  background-color: #075e54;
+  color: #fff;
+  padding: 10px;
+}
+
+.chat-messages {
+  flex-grow: 1;
+  padding: 10px;
+  overflow-y: auto;
+  background-color: #e5ddd5;
+}
+
+.chat-messages div {
+  margin-bottom: 10px;
+  padding: 6px;
   border-radius: 5px;
-  margin-top: 10px;
+  background-color: #dcf8c6;
+  max-width: 70%;
 }
 
-.message {
-  margin-bottom: 5px;
-  padding: 5px;
-  border-radius: 5px;
+.chat-input {
+  display: flex;
+  padding: 10px;
+  background-color: #f0f0f0;
 }
 
-.from-me {
-  background: #0078d4;
-  text-align: right;
+.chat-input input {
+  flex-grow: 1;
+  padding: 10px;
 }
 
-.from-other {
-  background: #555;
-  text-align: left;
-}
-
-.hidden {
-  display: none;
+.chat-input button {
+  padding: 10px;
 }
