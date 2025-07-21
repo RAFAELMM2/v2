@@ -1,5 +1,6 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getDatabase, ref, set, push, onChildAdded, get, child } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+// Firebase Config
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+import { getDatabase, ref, set, onValue, push } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAAPVM-uc_yHKcY7an0pQABzS2UgRsbNY8",
@@ -14,114 +15,91 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-// Variáveis globais
-let myName = "";
-let myNumber = "";
-let contacts = [];
-let currentChat = "";
+// Dados locais
+let myNumber = localStorage.getItem("number") || Math.floor(Math.random() * 1000000000).toString();
+let myName = localStorage.getItem("name") || "Sem Nome";
+let myPic = localStorage.getItem("pic") || "https://i.imgur.com/u8vS87x.png";
+localStorage.setItem("number", myNumber);
+document.getElementById("profileName").innerText = myName;
+document.getElementById("profilePic").src = myPic;
 
-// Elementos DOM
-const editProfileBtn = document.getElementById("editProfile");
-const profileSection = document.getElementById("profileSection");
-const nameInput = document.getElementById("nameInput");
-const numberInput = document.getElementById("numberInput");
-const saveProfile = document.getElementById("saveProfile");
-const contactList = document.getElementById("contactList");
-const newContactNumber = document.getElementById("newContactNumber");
-const addContact = document.getElementById("addContact");
-const chat = document.getElementById("chat");
-const chatWith = document.getElementById("chatWith");
-const chatMessages = document.getElementById("chatMessages");
-const messageInput = document.getElementById("messageInput");
-const sendMessage = document.getElementById("sendMessage");
+let selectedContact = null;
 
-// Funções
-editProfileBtn.onclick = () => {
-  profileSection.classList.toggle("hidden");
-};
+function editProfile() {
+  const newName = prompt("Novo nome:", myName);
+  if (newName) {
+    myName = newName;
+    localStorage.setItem("name", newName);
+    document.getElementById("profileName").innerText = newName;
+  }
+  document.getElementById("uploadPic").click();
+}
 
-saveProfile.onclick = () => {
-  myName = nameInput.value;
-  myNumber = numberInput.value;
-  if (myName && myNumber) {
-    localStorage.setItem("name", myName);
-    localStorage.setItem("number", myNumber);
-    profileSection.classList.add("hidden");
+document.getElementById("uploadPic").addEventListener("change", function () {
+  const file = this.files[0];
+  const reader = new FileReader();
+  reader.onload = () => {
+    myPic = reader.result;
+    localStorage.setItem("pic", myPic);
+    document.getElementById("profilePic").src = myPic;
+  };
+  reader.readAsDataURL(file);
+});
+
+function addContact() {
+  const number = document.getElementById("newContact").value;
+  if (!number) return alert("Número inválido");
+  const contacts = JSON.parse(localStorage.getItem("contacts") || "[]");
+  if (!contacts.includes(number)) {
+    contacts.push(number);
+    localStorage.setItem("contacts", JSON.stringify(contacts));
     loadContacts();
   }
-};
+  document.getElementById("newContact").value = "";
+}
 
-addContact.onclick = () => {
-  const contactNumber = newContactNumber.value;
-  if (contactNumber && !contacts.includes(contactNumber)) {
-    contacts.push(contactNumber);
-    localStorage.setItem("contacts", JSON.stringify(contacts));
-    renderContacts();
-    newContactNumber.value = "";
-  }
-};
-
-function renderContacts() {
-  contactList.innerHTML = "";
+function loadContacts() {
+  const contacts = JSON.parse(localStorage.getItem("contacts") || "[]");
+  const div = document.getElementById("contactsList");
+  div.innerHTML = "";
   if (contacts.length === 0) {
-    contactList.innerHTML = "<p>Você não tem contatos ainda.</p>";
+    div.innerHTML = "<p>Nenhum contato ainda...</p>";
     return;
   }
-
-  contacts.forEach(number => {
-    const btn = document.createElement("button");
-    btn.textContent = number;
-    btn.onclick = () => openChat(number);
-    contactList.appendChild(btn);
+  contacts.forEach(num => {
+    const c = document.createElement("div");
+    c.innerText = `+${num}`;
+    c.onclick = () => openChat(num);
+    div.appendChild(c);
   });
 }
 
-function openChat(number) {
-  currentChat = number;
-  chat.classList.remove("hidden");
-  chatWith.textContent = "Conversando com " + number;
-  chatMessages.innerHTML = "";
-
-  const chatId = getChatId(myNumber, number);
-  const msgRef = ref(db, "chats/" + chatId);
-
-  onChildAdded(msgRef, (snapshot) => {
-    const msg = snapshot.val();
-    const div = document.createElement("div");
-    div.classList.add("message");
-    div.classList.add(msg.from === myNumber ? "from-me" : "from-other");
-    div.textContent = msg.text;
-    chatMessages.appendChild(div);
-    chatMessages.scrollTop = chatMessages.scrollHeight;
+function openChat(contactNumber) {
+  selectedContact = contactNumber;
+  document.getElementById("chatHeader").innerText = `+${contactNumber}`;
+  const msgRef = ref(db, `messages/${myNumber}-${contactNumber}`);
+  onValue(msgRef, (snapshot) => {
+    const msgs = snapshot.val();
+    const chatBox = document.getElementById("chatMessages");
+    chatBox.innerHTML = "";
+    if (msgs) {
+      Object.values(msgs).forEach(msg => {
+        const m = document.createElement("div");
+        m.innerText = msg.text;
+        chatBox.appendChild(m);
+      });
+    }
   });
 }
 
-function getChatId(a, b) {
-  return [a, b].sort().join("_");
+function sendMessage() {
+  const input = document.getElementById("messageInput");
+  const text = input.value.trim();
+  if (!text || !selectedContact) return;
+  const chatPath = `messages/${myNumber}-${selectedContact}`;
+  const msgRef = ref(db, chatPath);
+  push(msgRef, { from: myNumber, text });
+  input.value = "";
 }
 
-sendMessage.onclick = () => {
-  const text = messageInput.value;
-  if (text && currentChat) {
-    const chatId = getChatId(myNumber, currentChat);
-    const msgRef = ref(db, "chats/" + chatId);
-    push(msgRef, { from: myNumber, text });
-    messageInput.value = "";
-  }
-};
-
-// Inicialização
-window.onload = () => {
-  myName = localStorage.getItem("name") || "";
-  myNumber = localStorage.getItem("number") || "";
-  contacts = JSON.parse(localStorage.getItem("contacts")) || [];
-
-  if (myName && myNumber) {
-    nameInput.value = myName;
-    numberInput.value = myNumber;
-    profileSection.classList.add("hidden");
-    renderContacts();
-  } else {
-    profileSection.classList.remove("hidden");
-  }
-};
+loadContacts();
