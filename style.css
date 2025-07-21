@@ -1,75 +1,221 @@
-body {
+/* Reset */
+* {
+  box-sizing: border-box;
   margin: 0;
-  font-family: Arial, sans-serif;
-  background: #121212;
-  color: white;
-  max-width: 600px;
-  margin-left: auto;
-  margin-right: auto;
-  padding: 10px;
+  padding: 0;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
-header {
+/* Body e app */
+body, html {
+  height: 100%;
+  background-color: #121b22;
+  color: #e5ddd5;
+  overflow: hidden;
+}
+
+#app {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+}
+
+/* Sidebar (lista de contatos e perfil) */
+#sidebar {
+  width: 320px;
+  background-color: #202c33;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid #222f35;
+  overflow-y: auto;
+}
+
+/* Header sidebar */
+#sidebar header {
+  background-color: #075e54;
+  color: white;
+  padding: 15px 20px;
+  font-size: 1.5rem;
+  font-weight: 700;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #1f1f1f;
-  padding: 10px;
-  border-radius: 6px;
 }
 
-input, button {
-  width: 100%;
-  margin: 5px 0;
-  padding: 10px;
-  border-radius: 6px;
+/* Botão editar perfil */
+#btnEditProfile {
+  background-color: #25d366;
   border: none;
-  font-size: 1em;
-}
-
-input {
-  background: #222;
-  color: white;
-}
-
-button {
-  background: #25d366;
-  color: black;
+  border-radius: 50px;
+  padding: 7px 14px;
+  font-weight: 700;
   cursor: pointer;
-  font-weight: bold;
+  transition: background-color 0.2s ease;
+  color: #111;
+}
+
+#btnEditProfile:hover {
+  background-color: #1ebe57;
+}
+
+/* Seções da sidebar */
+#profileSection, #contactsSection {
+  padding: 15px 20px;
+}
+
+/* Inputs do perfil e adicionar contato */
+#profileSection input, #contactsSection input {
+  width: 100%;
+  background-color: #323c45;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 15px;
+  font-size: 1rem;
+  color: #d1d1d1;
+  margin-bottom: 10px;
+  outline-offset: 0;
+}
+
+#profileSection input::placeholder, #contactsSection input::placeholder {
+  color: #999;
+}
+
+/* Botões da sidebar */
+#profileSection button, #contactsSection button {
+  background-color: #25d366;
+  color: #111;
+  border: none;
+  border-radius: 50px;
+  padding: 10px 0;
+  font-weight: 700;
+  cursor: pointer;
+  width: 100%;
+  transition: background-color 0.2s ease;
+}
+
+#profileSection button:hover, #contactsSection button:hover {
+  background-color: #1ebe57;
+}
+
+/* Lista de contatos */
+#contactsList {
+  max-height: 400px;
+  overflow-y: auto;
+  margin-bottom: 10px;
 }
 
 #contactsList div {
-  background: #1e1e1e;
-  padding: 8px;
-  border-radius: 5px;
-  margin: 5px 0;
+  background-color: #2a3942;
+  padding: 14px 18px;
+  border-radius: 10px;
+  margin-bottom: 10px;
   cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.2s ease;
+  display: flex;
+  align-items: center;
 }
 
+#contactsList div:hover {
+  background-color: #394a56;
+}
+
+/* Main chat window */
+#chatWindow {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: #111b21;
+}
+
+/* Chat header */
+#chatHeader {
+  background-color: #202c33;
+  color: #ece5dd;
+  padding: 15px 20px;
+  font-size: 1.3rem;
+  font-weight: 700;
+  border-bottom: 1px solid #222f35;
+  display: flex;
+  align-items: center;
+}
+
+/* Chat messages container */
 #chatMessages {
-  height: 300px;
+  flex-grow: 1;
+  padding: 20px;
   overflow-y: auto;
-  background: #1e1e1e;
-  padding: 10px;
-  border-radius: 6px;
-  margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
+/* Chat footer (input + botão) */
+#chatFooter {
+  display: flex;
+  padding: 10px 15px;
+  background-color: #202c33;
+  border-top: 1px solid #222f35;
+}
+
+/* Input da mensagem */
+#inputMessage {
+  flex-grow: 1;
+  background-color: #323c45;
+  border: none;
+  border-radius: 30px;
+  padding: 12px 20px;
+  font-size: 1rem;
+  color: #ddd;
+  outline: none;
+  margin-right: 10px;
+}
+
+/* Botão enviar */
+#btnSendMessage {
+  background-color: #25d366;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  font-size: 1.3rem;
+  font-weight: 700;
+  padding: 0;
+  color: #111;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+#btnSendMessage:hover {
+  background-color: #1ebe57;
+}
+
+/* Mensagens */
 .message {
-  margin-bottom: 10px;
+  max-width: 70%;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 1rem;
+  line-height: 1.3;
+  word-wrap: break-word;
+  box-shadow: 0 1px 0.5px rgba(0, 0, 0, 0.13);
 }
 
 .message.me {
-  text-align: right;
-  color: #25d366;
+  align-self: flex-end;
+  background-color: #dcf8c6;
+  color: #111b21;
+  border-bottom-right-radius: 0;
 }
 
 .message.their {
-  text-align: left;
-  color: white;
+  align-self: flex-start;
+  background-color: #262d31;
+  color: #e5ddd5;
+  border-bottom-left-radius: 0;
 }
 
+/* Esconder */
 .hidden {
-  display: none;
+  display: none !important;
 }
