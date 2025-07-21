@@ -4,37 +4,36 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>MiniZap</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
   <div class="app">
-    <div class="sidebar">
+    <aside class="sidebar">
       <div class="profile">
-        <img id="profilePic" src="https://i.imgur.com/u8vS87x.png" alt="Foto de perfil">
-        <input type="file" id="uploadPic" accept="image/*" hidden>
-        <h3 id="profileName">Seu Nome</h3>
+        <img id="profile-pic" src="https://i.imgur.com/9bK0ZtY.png" alt="Foto de Perfil" />
+        <p id="user-name">Seu Nome</p>
+        <p id="user-number">#0000</p>
         <button onclick="editProfile()">Editar Perfil</button>
       </div>
-      <div class="contacts" id="contactsList">
-        <p>Nenhum contato ainda...</p>
-      </div>
       <div class="add-contact">
-        <input type="text" id="newContact" placeholder="Número do contato">
+        <input type="text" id="contact-number" placeholder="Número do contato">
         <button onclick="addContact()">Adicionar</button>
       </div>
-    </div>
-    <div class="chat">
-      <div class="chat-header" id="chatHeader">Nenhum contato selecionado</div>
-      <div class="chat-messages" id="chatMessages"></div>
+      <ul id="contacts-list"></ul>
+    </aside>
+
+    <main class="chat">
+      <header class="chat-header">
+        <p id="chat-contact-name">Nenhum contato selecionado</p>
+      </header>
+      <div class="chat-messages" id="chat-messages"></div>
       <div class="chat-input">
-        <input type="text" id="messageInput" placeholder="Digite sua mensagem...">
+        <input type="text" id="message-input" placeholder="Digite uma mensagem" />
         <button onclick="sendMessage()">Enviar</button>
       </div>
-    </div>
+    </main>
   </div>
 
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
