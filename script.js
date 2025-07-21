@@ -1,105 +1,87 @@
-// Firebase Config
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-import { getDatabase, ref, set, onValue, push } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyAAPVM-uc_yHKcY7an0pQABzS2UgRsbNY8",
-  authDomain: "hjjj-f7cf5.firebaseapp.com",
-  databaseURL: "https://hjjj-f7cf5-default-rtdb.firebaseio.com",
-  projectId: "hjjj-f7cf5",
-  storageBucket: "hjjj-f7cf5.appspot.com",
-  messagingSenderId: "162911169867",
-  appId: "1:162911169867:web:4a8e8d2db6fd886c390cce",
+let user = {
+  name: "Seu Nome",
+  number: "#0000",
+  photo: "https://i.imgur.com/9bK0ZtY.png",
+  contacts: [],
 };
 
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
-
-// Dados locais
-let myNumber = localStorage.getItem("number") || Math.floor(Math.random() * 1000000000).toString();
-let myName = localStorage.getItem("name") || "Sem Nome";
-let myPic = localStorage.getItem("pic") || "https://i.imgur.com/u8vS87x.png";
-localStorage.setItem("number", myNumber);
-document.getElementById("profileName").innerText = myName;
-document.getElementById("profilePic").src = myPic;
-
-let selectedContact = null;
+let currentChat = null;
+let messages = {};
 
 function editProfile() {
-  const newName = prompt("Novo nome:", myName);
-  if (newName) {
-    myName = newName;
-    localStorage.setItem("name", newName);
-    document.getElementById("profileName").innerText = newName;
-  }
-  document.getElementById("uploadPic").click();
-}
+  const newName = prompt("Digite seu nome:");
+  const newNumber = prompt("Digite seu número:");
+  const newPhoto = prompt("URL da nova foto de perfil:");
 
-document.getElementById("uploadPic").addEventListener("change", function () {
-  const file = this.files[0];
-  const reader = new FileReader();
-  reader.onload = () => {
-    myPic = reader.result;
-    localStorage.setItem("pic", myPic);
-    document.getElementById("profilePic").src = myPic;
-  };
-  reader.readAsDataURL(file);
-});
+  if (newName) user.name = newName;
+  if (newNumber) user.number = "#" + newNumber;
+  if (newPhoto) user.photo = newPhoto;
+
+  document.getElementById("user-name").innerText = user.name;
+  document.getElementById("user-number").innerText = user.number;
+  document.getElementById("profile-pic").src = user.photo;
+}
 
 function addContact() {
-  const number = document.getElementById("newContact").value;
-  if (!number) return alert("Número inválido");
-  const contacts = JSON.parse(localStorage.getItem("contacts") || "[]");
-  if (!contacts.includes(number)) {
-    contacts.push(number);
-    localStorage.setItem("contacts", JSON.stringify(contacts));
-    loadContacts();
-  }
-  document.getElementById("newContact").value = "";
-}
+  const input = document.getElementById("contact-number");
+  const number = input.value.trim();
 
-function loadContacts() {
-  const contacts = JSON.parse(localStorage.getItem("contacts") || "[]");
-  const div = document.getElementById("contactsList");
-  div.innerHTML = "";
-  if (contacts.length === 0) {
-    div.innerHTML = "<p>Nenhum contato ainda...</p>";
+  if (number === "" || user.contacts.includes(number)) {
+    alert("Número inválido ou já adicionado.");
     return;
   }
-  contacts.forEach(num => {
-    const c = document.createElement("div");
-    c.innerText = `+${num}`;
-    c.onclick = () => openChat(num);
-    div.appendChild(c);
+
+  // Simula que só existe os contatos #1234 e #5678 no sistema
+  const validContacts = ["1234", "5678"];
+  if (!validContacts.includes(number)) {
+    alert("Contato não encontrado.");
+    return;
+  }
+
+  user.contacts.push(number);
+  input.value = "";
+  renderContacts();
+}
+
+function renderContacts() {
+  const ul = document.getElementById("contacts-list");
+  ul.innerHTML = "";
+  user.contacts.forEach(number => {
+    const li = document.createElement("li");
+    li.innerText = "#" + number;
+    li.onclick = () => openChat(number);
+    ul.appendChild(li);
   });
 }
 
-function openChat(contactNumber) {
-  selectedContact = contactNumber;
-  document.getElementById("chatHeader").innerText = `+${contactNumber}`;
-  const msgRef = ref(db, `messages/${myNumber}-${contactNumber}`);
-  onValue(msgRef, (snapshot) => {
-    const msgs = snapshot.val();
-    const chatBox = document.getElementById("chatMessages");
-    chatBox.innerHTML = "";
-    if (msgs) {
-      Object.values(msgs).forEach(msg => {
-        const m = document.createElement("div");
-        m.innerText = msg.text;
-        chatBox.appendChild(m);
-      });
-    }
-  });
+function openChat(number) {
+  currentChat = number;
+  document.getElementById("chat-contact-name").innerText = "#" + number;
+  renderMessages();
 }
 
 function sendMessage() {
-  const input = document.getElementById("messageInput");
+  const input = document.getElementById("message-input");
   const text = input.value.trim();
-  if (!text || !selectedContact) return;
-  const chatPath = `messages/${myNumber}-${selectedContact}`;
-  const msgRef = ref(db, chatPath);
-  push(msgRef, { from: myNumber, text });
+  if (!text || !currentChat) return;
+
+  if (!messages[currentChat]) messages[currentChat] = [];
+  messages[currentChat].push({ from: user.number, text });
+
   input.value = "";
+  renderMessages();
 }
 
-loadContacts();
+function renderMessages() {
+  const div = document.getElementById("chat-messages");
+  div.innerHTML = "";
+
+  const chat = messages[currentChat] || [];
+  chat.forEach(msg => {
+    const p = document.createElement("p");
+    p.innerText = `${msg.from}: ${msg.text}`;
+    div.appendChild(p);
+  });
+
+  div.scrollTop = div.scrollHeight;
+}
