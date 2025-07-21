@@ -1,132 +1,75 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
 body {
-  font-family: 'Segoe UI', sans-serif;
-  background: #111;
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #121212;
   color: white;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 10px;
 }
 
-.app {
+header {
   display: flex;
-  height: 100vh;
+  justify-content: space-between;
+  align-items: center;
+  background: #1f1f1f;
+  padding: 10px;
+  border-radius: 6px;
 }
 
-.sidebar {
-  width: 300px;
-  background: #1e1e1e;
-  padding: 20px;
-  border-right: 1px solid #333;
-  display: flex;
-  flex-direction: column;
-}
-
-.profile {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.profile img {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-}
-
-.profile button {
-  margin-top: 10px;
-  padding: 5px 10px;
-  background: #0b8457;
+input, button {
+  width: 100%;
+  margin: 5px 0;
+  padding: 10px;
+  border-radius: 6px;
   border: none;
-  color: white;
-  cursor: pointer;
-  border-radius: 5px;
+  font-size: 1em;
 }
 
-.add-contact {
-  display: flex;
-  gap: 10px;
+input {
+  background: #222;
+  color: white;
+}
+
+button {
+  background: #25d366;
+  color: black;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+#contactsList div {
+  background: #1e1e1e;
+  padding: 8px;
+  border-radius: 5px;
+  margin: 5px 0;
+  cursor: pointer;
+}
+
+#chatMessages {
+  height: 300px;
+  overflow-y: auto;
+  background: #1e1e1e;
+  padding: 10px;
+  border-radius: 6px;
   margin-bottom: 10px;
 }
 
-.add-contact input {
-  flex: 1;
-  padding: 5px;
-  background: #2a2a2a;
-  border: 1px solid #444;
+.message {
+  margin-bottom: 10px;
+}
+
+.message.me {
+  text-align: right;
+  color: #25d366;
+}
+
+.message.their {
+  text-align: left;
   color: white;
-  border-radius: 5px;
 }
 
-.add-contact button {
-  padding: 5px 10px;
-  background: #007bff;
-  border: none;
-  color: white;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-#contacts-list {
-  list-style: none;
-  margin-top: 10px;
-  overflow-y: auto;
-  flex-grow: 1;
-}
-
-#contacts-list li {
-  padding: 10px;
-  border-bottom: 1px solid #333;
-  cursor: pointer;
-}
-
-#contacts-list li:hover {
-  background: #2e2e2e;
-}
-
-.chat {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-.chat-header {
-  padding: 20px;
-  background: #252525;
-  border-bottom: 1px solid #333;
-}
-
-.chat-messages {
-  flex: 1;
-  padding: 20px;
-  overflow-y: auto;
-  background: #121212;
-}
-
-.chat-input {
-  display: flex;
-  padding: 15px;
-  border-top: 1px solid #333;
-  background: #1c1c1c;
-}
-
-.chat-input input {
-  flex: 1;
-  padding: 10px;
-  background: #2c2c2c;
-  border: 1px solid #444;
-  color: white;
-  border-radius: 5px;
-}
-
-.chat-input button {
-  margin-left: 10px;
-  padding: 10px 15px;
-  background: #28a745;
-  border: none;
-  color: white;
-  border-radius: 5px;
-  cursor: pointer;
+.hidden {
+  display: none;
 }
