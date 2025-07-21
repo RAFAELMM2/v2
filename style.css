@@ -1,7 +1,13 @@
-body {
+* {
   margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
   font-family: 'Segoe UI', sans-serif;
-  background-color: #ece5dd;
+  background: #111;
+  color: white;
 }
 
 .app {
@@ -10,82 +16,117 @@ body {
 }
 
 .sidebar {
-  width: 30%;
-  background-color: #fff;
-  border-right: 1px solid #ccc;
+  width: 300px;
+  background: #1e1e1e;
+  padding: 20px;
+  border-right: 1px solid #333;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
 }
 
 .profile {
-  padding: 10px;
   text-align: center;
-  border-bottom: 1px solid #ccc;
+  margin-bottom: 20px;
 }
 
 .profile img {
   width: 80px;
   height: 80px;
   border-radius: 50%;
-  cursor: pointer;
 }
 
-.contacts {
-  flex-grow: 1;
-  overflow-y: auto;
-  padding: 10px;
-}
-
-.contacts div {
-  padding: 8px;
-  border-bottom: 1px solid #eee;
+.profile button {
+  margin-top: 10px;
+  padding: 5px 10px;
+  background: #0b8457;
+  border: none;
+  color: white;
   cursor: pointer;
+  border-radius: 5px;
 }
 
 .add-contact {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.add-contact input {
+  flex: 1;
+  padding: 5px;
+  background: #2a2a2a;
+  border: 1px solid #444;
+  color: white;
+  border-radius: 5px;
+}
+
+.add-contact button {
+  padding: 5px 10px;
+  background: #007bff;
+  border: none;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#contacts-list {
+  list-style: none;
+  margin-top: 10px;
+  overflow-y: auto;
+  flex-grow: 1;
+}
+
+#contacts-list li {
   padding: 10px;
-  border-top: 1px solid #ccc;
+  border-bottom: 1px solid #333;
+  cursor: pointer;
+}
+
+#contacts-list li:hover {
+  background: #2e2e2e;
 }
 
 .chat {
-  width: 70%;
+  flex: 1;
   display: flex;
   flex-direction: column;
 }
 
 .chat-header {
-  background-color: #075e54;
-  color: #fff;
-  padding: 10px;
+  padding: 20px;
+  background: #252525;
+  border-bottom: 1px solid #333;
 }
 
 .chat-messages {
-  flex-grow: 1;
-  padding: 10px;
+  flex: 1;
+  padding: 20px;
   overflow-y: auto;
-  background-color: #e5ddd5;
-}
-
-.chat-messages div {
-  margin-bottom: 10px;
-  padding: 6px;
-  border-radius: 5px;
-  background-color: #dcf8c6;
-  max-width: 70%;
+  background: #121212;
 }
 
 .chat-input {
   display: flex;
-  padding: 10px;
-  background-color: #f0f0f0;
+  padding: 15px;
+  border-top: 1px solid #333;
+  background: #1c1c1c;
 }
 
 .chat-input input {
-  flex-grow: 1;
+  flex: 1;
   padding: 10px;
+  background: #2c2c2c;
+  border: 1px solid #444;
+  color: white;
+  border-radius: 5px;
 }
 
 .chat-input button {
-  padding: 10px;
+  margin-left: 10px;
+  padding: 10px 15px;
+  background: #28a745;
+  border: none;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
 }
