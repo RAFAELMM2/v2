@@ -1,39 +1,40 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>MiniZap</title>
-  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="app">
-    <aside class="sidebar">
-      <div class="profile">
-        <img id="profile-pic" src="https://i.imgur.com/9bK0ZtY.png" alt="Foto de Perfil" />
-        <p id="user-name">Seu Nome</p>
-        <p id="user-number">#0000</p>
-        <button onclick="editProfile()">Editar Perfil</button>
-      </div>
-      <div class="add-contact">
-        <input type="text" id="contact-number" placeholder="Número do contato">
-        <button onclick="addContact()">Adicionar</button>
-      </div>
-      <ul id="contacts-list"></ul>
-    </aside>
+  <div id="app">
+    <header>
+      <h1>MiniZap</h1>
+      <button id="btnEditProfile">Editar Perfil</button>
+    </header>
 
-    <main class="chat">
-      <header class="chat-header">
-        <p id="chat-contact-name">Nenhum contato selecionado</p>
-      </header>
-      <div class="chat-messages" id="chat-messages"></div>
-      <div class="chat-input">
-        <input type="text" id="message-input" placeholder="Digite uma mensagem" />
-        <button onclick="sendMessage()">Enviar</button>
-      </div>
-    </main>
+    <section id="profileSection" class="hidden">
+      <input type="text" id="inputName" placeholder="Seu nome" />
+      <input type="text" id="inputNumber" placeholder="Seu número (ex: 55999999999)" />
+      <input type="text" id="inputPhoto" placeholder="URL da foto (opcional)" />
+      <button id="btnSaveProfile">Salvar Perfil</button>
+    </section>
+
+    <section id="contactsSection">
+      <h2>Contatos</h2>
+      <div id="contactsList"></div>
+      <input type="text" id="inputAddContact" placeholder="Número do contato (ex: 55888888888)" />
+      <button id="btnAddContact">Adicionar Contato</button>
+    </section>
+
+    <section id="chatSection" class="hidden">
+      <h2 id="chatWith"></h2>
+      <div id="chatMessages"></div>
+      <input type="text" id="inputMessage" placeholder="Digite sua mensagem" />
+      <button id="btnSendMessage">Enviar</button>
+    </section>
   </div>
 
-  <script src="script.js"></script>
+  <script type="module" src="script.js"></script>
 </body>
 </html>
