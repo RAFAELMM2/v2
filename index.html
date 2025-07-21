@@ -2,37 +2,39 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>MiniZap</title>
-  <link rel="stylesheet" href="style.css" />
-  <script type="module" src="script.js" defer></script>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="app">
-    <header>
-      <h1>MiniZap</h1>
-      <button id="editProfile">Editar Perfil</button>
-    </header>
-
-    <section id="profileSection" class="hidden">
-      <input type="text" id="nameInput" placeholder="Seu nome" />
-      <input type="text" id="numberInput" placeholder="Seu número" />
-      <button id="saveProfile">Salvar</button>
-    </section>
-
-    <section id="contacts">
-      <h2>Contatos</h2>
-      <div id="contactList"></div>
-      <input type="text" id="newContactNumber" placeholder="Número do contato" />
-      <button id="addContact">Adicionar</button>
-    </section>
-
-    <section id="chat" class="hidden">
-      <h2 id="chatWith"></h2>
-      <div id="chatMessages"></div>
-      <input type="text" id="messageInput" placeholder="Mensagem" />
-      <button id="sendMessage">Enviar</button>
-    </section>
+    <div class="sidebar">
+      <div class="profile">
+        <img id="profilePic" src="https://i.imgur.com/u8vS87x.png" alt="Foto de perfil">
+        <input type="file" id="uploadPic" accept="image/*" hidden>
+        <h3 id="profileName">Seu Nome</h3>
+        <button onclick="editProfile()">Editar Perfil</button>
+      </div>
+      <div class="contacts" id="contactsList">
+        <p>Nenhum contato ainda...</p>
+      </div>
+      <div class="add-contact">
+        <input type="text" id="newContact" placeholder="Número do contato">
+        <button onclick="addContact()">Adicionar</button>
+      </div>
+    </div>
+    <div class="chat">
+      <div class="chat-header" id="chatHeader">Nenhum contato selecionado</div>
+      <div class="chat-messages" id="chatMessages"></div>
+      <div class="chat-input">
+        <input type="text" id="messageInput" placeholder="Digite sua mensagem...">
+        <button onclick="sendMessage()">Enviar</button>
+      </div>
+    </div>
   </div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
