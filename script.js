@@ -1,87 +1,116 @@
-let user = {
-  name: "Seu Nome",
-  number: "#0000",
-  photo: "https://i.imgur.com/9bK0ZtY.png",
-  contacts: [],
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getDatabase, ref, get, set, push, onChildAdded, child } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAAPVM-uc_yHKcY7an0pQABzS2UgRsbNY8",
+  authDomain: "hjjj-f7cf5.firebaseapp.com",
+  databaseURL: "https://hjjj-f7cf5-default-rtdb.firebaseio.com",
+  projectId: "hjjj-f7cf5",
+  storageBucket: "hjjj-f7cf5.appspot.com",
+  messagingSenderId: "162911169867",
+  appId: "1:162911169867:web:4a8e8d2db6fd886c390cce"
 };
 
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+let currentUser = {};
 let currentChat = null;
-let messages = {};
 
-function editProfile() {
-  const newName = prompt("Digite seu nome:");
-  const newNumber = prompt("Digite seu número:");
-  const newPhoto = prompt("URL da nova foto de perfil:");
+const editBtn = document.getElementById("editProfileBtn");
+const saveBtn = document.getElementById("saveProfileBtn");
+const profileSection = document.getElementById("profileSection");
+const chatSection = document.getElementById("chatSection");
+const chatBox = document.getElementById("chatBox");
+const chatWith = document.getElementById("chatWith");
 
-  if (newName) user.name = newName;
-  if (newNumber) user.number = "#" + newNumber;
-  if (newPhoto) user.photo = newPhoto;
+editBtn.onclick = () => {
+  profileSection.classList.toggle("hidden");
+};
 
-  document.getElementById("user-name").innerText = user.name;
-  document.getElementById("user-number").innerText = user.number;
-  document.getElementById("profile-pic").src = user.photo;
-}
+saveBtn.onclick = () => {
+  const name = document.getElementById("myName").value.trim();
+  const number = document.getElementById("myNumber").value.trim();
+  const photo = document.getElementById("myPhoto").value.trim();
 
-function addContact() {
-  const input = document.getElementById("contact-number");
-  const number = input.value.trim();
-
-  if (number === "" || user.contacts.includes(number)) {
-    alert("Número inválido ou já adicionado.");
-    return;
+  if (name && number) {
+    currentUser = { name, number, photo, contacts: [] };
+    const userRef = ref(db, "users/" + number);
+    set(userRef, currentUser).then(() => {
+      alert("Perfil salvo!");
+      profileSection.classList.add("hidden");
+      loadContacts();
+    });
   }
+};
 
-  // Simula que só existe os contatos #1234 e #5678 no sistema
-  const validContacts = ["1234", "5678"];
-  if (!validContacts.includes(number)) {
-    alert("Contato não encontrado.");
-    return;
-  }
+function loadContacts() {
+  const list = document.getElementById("contactList");
+  list.innerHTML = "";
+  if (!currentUser.number) return;
 
-  user.contacts.push(number);
-  input.value = "";
-  renderContacts();
-}
-
-function renderContacts() {
-  const ul = document.getElementById("contacts-list");
-  ul.innerHTML = "";
-  user.contacts.forEach(number => {
-    const li = document.createElement("li");
-    li.innerText = "#" + number;
-    li.onclick = () => openChat(number);
-    ul.appendChild(li);
+  get(ref(db, `users/${currentUser.number}/contacts`)).then(snapshot => {
+    const contacts = snapshot.val() || {};
+    Object.entries(contacts).forEach(([num, name]) => {
+      const div = document.createElement("div");
+      div.textContent = `${name} (${num})`;
+      div.onclick = () => openChat(num, name);
+      list.appendChild(div);
+    });
   });
 }
 
-function openChat(number) {
-  currentChat = number;
-  document.getElementById("chat-contact-name").innerText = "#" + number;
-  renderMessages();
+document.getElementById("addContactBtn").onclick = () => {
+  const contactNum = document.getElementById("newContactNumber").value.trim();
+  if (!contactNum || !currentUser.number || contactNum === currentUser.number) return;
+
+  get(ref(db, "users/" + contactNum)).then(snapshot => {
+    if (snapshot.exists()) {
+      const contactName = snapshot.val().name;
+      const userContactsRef = ref(db, `users/${currentUser.number}/contacts/${contactNum}`);
+      set(userContactsRef, contactName).then(() => {
+        alert("Contato adicionado!");
+        loadContacts();
+      });
+    } else {
+      alert("Número não encontrado!");
+    }
+  });
+};
+
+function openChat(contactNumber, contactName) {
+  currentChat = contactNumber;
+  chatSection.classList.remove("hidden");
+  chatWith.textContent = `Conversando com ${contactName}`;
+  chatBox.innerHTML = "";
+
+  const chatRef = ref(db, `messages/${getChatId(currentUser.number, contactNumber)}`);
+  onChildAdded(chatRef, (snapshot) => {
+    const msg = snapshot.val();
+    const div = document.createElement("div");
+    div.classList.add("message");
+    div.classList.add(msg.sender === currentUser.number ? "my-message" : "their-message");
+    div.textContent = msg.text;
+    chatBox.appendChild(div);
+    chatBox.scrollTop = chatBox.scrollHeight;
+  });
 }
 
-function sendMessage() {
-  const input = document.getElementById("message-input");
-  const text = input.value.trim();
+function getChatId(a, b) {
+  return [a, b].sort().join("-");
+}
+
+document.getElementById("sendMessageBtn").onclick = () => {
+  const text = document.getElementById("messageInput").value.trim();
   if (!text || !currentChat) return;
 
-  if (!messages[currentChat]) messages[currentChat] = [];
-  messages[currentChat].push({ from: user.number, text });
-
-  input.value = "";
-  renderMessages();
-}
-
-function renderMessages() {
-  const div = document.getElementById("chat-messages");
-  div.innerHTML = "";
-
-  const chat = messages[currentChat] || [];
-  chat.forEach(msg => {
-    const p = document.createElement("p");
-    p.innerText = `${msg.from}: ${msg.text}`;
-    div.appendChild(p);
+  const chatId = getChatId(currentUser.number, currentChat);
+  const msgRef = push(ref(db, `messages/${chatId}`));
+  set(msgRef, {
+    sender: currentUser.number,
+    text: text,
+    timestamp: Date.now()
+  }).then(() => {
+    document.getElementById("messageInput").value = "";
   });
-
-  div.scrollTop = div.scrollHeight;
-}
+};
